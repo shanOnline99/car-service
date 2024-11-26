@@ -1,0 +1,15 @@
+{
+    "header": {
+      "title": "Car Service Centre",
+      "user": {
+        "name": "Thisaru",
+        "dropdown": {
+          "languages": "Languages",
+          "english": "English",
+          "french": "French",
+          "spanish": "Spanish"
+        }
+      }
+    }
+  }
+  

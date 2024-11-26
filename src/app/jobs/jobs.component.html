@@ -1,0 +1,173 @@
+<div>
+  <!-- Top Bar -->
+  <div class="flex justify-between items-center mb-5">
+    <div class="flex flex-col">
+      <div class="text-xl font-bold text-gray-800 pb-1">Jobs Management</div>
+      <div class="text-sm text-gray-800 font-normal">You can add, edit, or remove jobs here!</div>
+    </div>
+
+    <div class="flex gap-4">
+      <button 
+        class="bg-teal-600 text-white px-4 py-2 rounded shadow hover:bg-teal-700 transition duration-200"
+        (click)="toggleForm()"
+      >
+        Add a Job
+      </button>
+    </div>
+  </div>
+
+  <!-- Popup Modal for Job Adding Form -->
+<div *ngIf="showForm" class="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center z-50 backdrop-blur-sm">
+  <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+    <div class="text-2xl font-semibold mb-6 text-teal-600">Add Job</div>
+    <form (ngSubmit)="addJob()" #jobForm="ngForm">
+      <div class="grid grid-cols-1 gap-6 mb-6">
+        
+        <!-- Car Dropdown -->
+        <div class="relative">
+          <select 
+            [(ngModel)]="newJob.car" 
+            name="car" 
+            class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600" 
+            required 
+            #carInput="ngModel"
+          >
+            <option value="" disabled selected>Select a car</option>
+            <option *ngFor="let car of cars" [value]="car.car">{{ car.car }} ({{ car.regNo }})</option>
+          </select>
+          <div *ngIf="carInput.invalid && carInput.touched" class="absolute text-sm text-red-500 mt-1">Car selection is required.</div>
+        </div>
+
+        <!-- Job Description -->
+        <div class="relative">
+          <input 
+            [(ngModel)]="newJob.description" 
+            name="description" 
+            class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600" 
+            placeholder="Job Description" 
+            required 
+            #descriptionInput="ngModel"
+          />
+          <div *ngIf="descriptionInput.invalid && descriptionInput.touched" class="absolute text-sm text-red-500 mt-1">Description is required.</div>
+        </div>
+
+        <!-- Mechanic Assigned -->
+        <div class="relative">
+          <input 
+            [(ngModel)]="newJob.mechanic" 
+            name="mechanic" 
+            class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600" 
+            placeholder="Mechanic Assigned" 
+            required 
+            #mechanicInput="ngModel"
+          />
+          <div *ngIf="mechanicInput.invalid && mechanicInput.touched" class="absolute text-sm text-red-500 mt-1">Mechanic is required.</div>
+        </div>
+
+        <!-- Estimated Time -->
+        <div class="relative">
+          <input 
+            [(ngModel)]="newJob.estimatedTime" 
+            name="estimatedTime" 
+            class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600" 
+            placeholder="Estimated Time" 
+            required 
+            #estimatedTimeInput="ngModel"
+          />
+          <div *ngIf="estimatedTimeInput.invalid && estimatedTimeInput.touched" class="absolute text-sm text-red-500 mt-1">Estimated time is required.</div>
+        </div>
+
+        <!-- Status Dropdown -->
+        <div class="relative">
+          <select 
+            [(ngModel)]="newJob.status" 
+            name="status" 
+            class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600" 
+            required 
+            #statusInput="ngModel"
+          >
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+          <div *ngIf="statusInput.invalid && statusInput.touched" class="absolute text-sm text-red-500 mt-1">Status is required.</div>
+        </div>
+      </div>
+      
+      <div class="flex justify-between gap-4">
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          [disabled]="jobForm.invalid" 
+          class="bg-teal-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-teal-700 disabled:opacity-50 transition duration-200"
+        >
+          Add Job
+        </button>
+        
+        <!-- Cancel Button -->
+        <button 
+          type="button" 
+          (click)="toggleForm()" 
+          class="bg-red-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition duration-200"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+  <!-- Jobs Table -->
+<div class="mt-5">
+  <table class="min-w-full border-collapse table-auto">
+    <thead class="bg-gray-400 rounded-t-lg">
+      <tr class="border-b">
+        <th class="p-3 text-lg text-left">Car</th>
+        <th class="p-3 text-lg text-left">Job Description</th>
+        <th class="p-3 text-lg text-left">Mechanic Assigned</th>
+        <th class="p-3 text-lg text-left">Status</th>
+        <th class="p-3 text-lg text-left">Estimated Time</th>
+        <th class="p-3 text-lg text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let job of paginatedJobs; let i = index" class="border-b">
+        <td class="p-3 text-sm">{{ job.car }}</td>
+        <td class="p-3 text-sm">{{ job.description }}</td>
+        <td class="p-3 text-sm">{{ job.mechanic }}</td>
+        <td class="p-3 text-sm">
+          <span [ngClass]="{
+              'bg-yellow-500': job.status === 'Pending',
+              'bg-blue-500': job.status === 'In Progress',
+              'bg-green-500': job.status === 'Completed'
+            }" 
+            class="text-white px-2 py-1 rounded-full">
+            {{ job.status }}
+          </span>
+        </td>
+        <td class="p-3 text-sm">{{ job.estimatedTime }}</td>
+        <td class="p-3 text-sm">
+          <button (click)="editJob(i)" class="text-teal-600 hover:text-yellow-800">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button (click)="deleteJob(i)" class="text-red-600 hover:text-red-800 ml-4">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- MatPaginator -->
+  <mat-paginator [length]="jobs.length"
+                 [pageSize]="pageSize"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 (page)="onPageChange($event)"
+                 aria-label="Select page">
+  </mat-paginator>
+</div>
+
+
+  
+</div>

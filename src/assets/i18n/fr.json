@@ -1,0 +1,15 @@
+{
+    "header": {
+      "title": "Centre de Service Automobile",
+      "user": {
+        "name": "Thisaru",
+        "dropdown": {
+          "languages": "Langues",
+          "english": "Anglais",
+          "french": "Français",
+          "spanish": "Espagnol"
+        }
+      }
+    }
+  }
+  

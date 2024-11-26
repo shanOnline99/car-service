@@ -1,0 +1,148 @@
+<div>
+    <!-- Top Bar -->
+    <div class="flex justify-between items-center mb-5">
+      <div class="flex flex-col">
+        <div class="text-xl font-bold text-gray-800 pb-1">Car Management</div>
+        <div class="text-sm text-gray-800 font-normal">You can add, edit, or remove cars here!</div>
+      </div>
+  
+      <div class="flex gap-4">
+        <button 
+          class="bg-teal-600 text-white px-4 py-2 rounded shadow hover:bg-teal-700 transition duration-200"
+          (click)="toggleForm()"
+        >
+          Add a Car
+        </button>
+      </div>
+    </div>
+  
+    <!-- Popup Modal for Car Adding Form -->
+<div *ngIf="showForm" class="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center z-50 backdrop-blur-sm">
+  <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+    <div class="text-2xl font-semibold mb-6 text-teal-600">Add Car</div>
+    <form (ngSubmit)="addCar()" #carForm="ngForm">
+      <div class="grid grid-cols-1 gap-6 mb-6">
+        
+        <!-- Car Name -->
+        <div class="relative">
+          <input 
+            [(ngModel)]="newCar.car" 
+            name="car" 
+            class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600" 
+            placeholder="Car Name" 
+            required 
+            #carInput="ngModel"
+          />
+          <div *ngIf="carInput.invalid && carInput.touched" class="absolute text-sm text-red-500 mt-1">Car name is required.</div>
+        </div>
+
+        <!-- Registration Number -->
+        <div class="relative">
+          <input 
+            [(ngModel)]="newCar.regNo" 
+            name="regNo" 
+            class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600" 
+            placeholder="Registration No" 
+            required 
+            #regNoInput="ngModel"
+          />
+          <div *ngIf="regNoInput.invalid && regNoInput.touched" class="absolute text-sm text-red-500 mt-1">Registration number is required.</div>
+        </div>
+
+        <!-- Owner -->
+        <div class="relative">
+          <input 
+            [(ngModel)]="newCar.owner" 
+            name="owner" 
+            class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600" 
+            placeholder="Owner Name" 
+            required 
+            #ownerInput="ngModel"
+          />
+          <div *ngIf="ownerInput.invalid && ownerInput.touched" class="absolute text-sm text-red-500 mt-1">Owner name is required.</div>
+        </div>
+
+        <!-- Contact Number -->
+        <div class="relative">
+          <input 
+            [(ngModel)]="newCar.contacts" 
+            name="contacts" 
+            class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600" 
+            placeholder="Contact Number" 
+            required 
+            pattern="^\d{10}$" 
+            #contactsInput="ngModel"
+          />
+          <div *ngIf="contactsInput.invalid && contactsInput.touched" class="absolute text-sm text-red-500 mt-1">
+            <div *ngIf="contactsInput.errors?.['required']">Contact number is required.</div>
+            <div *ngIf="contactsInput.errors?.['pattern']">Contact number must be 10 digits.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex justify-between gap-4">
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          [disabled]="carForm.invalid" 
+          class="bg-teal-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-teal-700 disabled:opacity-50 transition duration-200"
+        >
+          Add Car
+        </button>
+        
+        <!-- Cancel Button -->
+        <button 
+          type="button" 
+          (click)="toggleForm()" 
+          class="bg-red-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition duration-200"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+    <!-- Cars Table -->
+<div class="mt-5">
+  <table class="min-w-full border-collapse table-auto">
+    <thead class="bg-gray-400 rounded-t-lg">
+      <tr class="border-b">
+        <th class="p-3 text-lg text-left">Car</th>
+        <th class="p-3 text-lg text-left">Reg No</th>
+        <th class="p-3 text-lg text-left">Owner</th>
+        <th class="p-3 text-lg text-left">Contacts</th>
+        <th class="p-3 text-lg text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let car of paginatedCars; let i = index" class="border-b">
+        <td class="p-3 text-sm">{{ car.car }}</td>
+        <td class="p-3 text-sm">{{ car.regNo }}</td>
+        <td class="p-3 text-sm">{{ car.owner }}</td>
+        <td class="p-3 text-sm">{{ car.contacts }}</td>
+        <td class="p-3 text-sm">
+          <button (click)="editCar(i)" class="text-teal-500 hover:text-blue-700">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button (click)="deleteCar(i)" class="text-red-500 hover:text-red-700 ml-4">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- MatPaginator -->
+  <mat-paginator [length]="totalCars"
+                 [pageSize]="pageSize"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 (page)="onPageChange($event)"
+                 aria-label="Select page">
+  </mat-paginator>
+</div>
+
+      
+  </div>
+  
