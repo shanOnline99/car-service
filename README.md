@@ -2,6 +2,25 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.1.
 
+Introduction
+This test is designed to assess your knowledge of Angular.
+
+Instructions
+You have to use the Angular 18 to create the project.
+Include linting.
+Use Tailwind CSS with Sass for styling.
+Include four environments: development, staging, production, and testing.
+Make it responsive.
+Use latest angular features.
+Problem
+I want to have a UI for a car service center. The UI should have the following features:
+
+A way to add a new car.
+A way to add a job for the car and a quick way to mark the status while the job is in progress.
+A dashboard to show the number of cars in the service center and the number of jobs in progress with status.
+Show statistics of the details you can show on the dashboard.
+Use a language file to support multiple languages.
+
 ## Development server
 
 To start a local development server, run:
